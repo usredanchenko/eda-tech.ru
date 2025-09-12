@@ -1,0 +1,25 @@
+{
+  "name": "eda-tech-telegram-bot",
+  "version": "1.0.0",
+  "description": "EDA-TECH Support Bot для обработки заявок с сайта",
+  "main": "telegram-bot.js",
+  "scripts": {
+    "start": "node telegram-bot.js",
+    "dev": "nodemon telegram-bot.js",
+    "pm2": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop eda-tech-telegram-bot",
+    "pm2:restart": "pm2 restart eda-tech-telegram-bot",
+    "pm2:logs": "pm2 logs eda-tech-telegram-bot"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["telegram", "bot", "eda-tech", "webhook", "nodejs"],
+  "author": "EDA-TECH Studio",
+  "license": "MIT"
+}
