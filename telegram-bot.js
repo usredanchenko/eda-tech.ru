@@ -16,12 +16,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// === ФУНКЦИЯ ЭКРАНИРОВАНИЯ MARKDOWN ===
-function escapeMarkdown(text) {
-    if (!text) return text;
-    return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
-}
-
 // === ФУНКЦИЯ ОТПРАВКИ В TELEGRAM ===
 async function sendToTelegram(message, chatId = ADMIN_CHAT_ID) {
     try {
@@ -30,7 +24,7 @@ async function sendToTelegram(message, chatId = ADMIN_CHAT_ID) {
             {
                 chat_id: chatId,
                 text: message,
-                parse_mode: 'Markdown'
+                // Убираем parse_mode чтобы избежать ошибок парсинга
             }
         );
         return { success: true, data: response.data };
@@ -64,47 +58,47 @@ app.post('/api/submit-order', async (req, res) => {
     };
 
     const message = `
-🚀 *НОВАЯ ЗАЯВКА НА РАЗРАБОТКУ*
+🚀 НОВАЯ ЗАЯВКА НА РАЗРАБОТКУ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *ИНФОРМАЦИЯ О КЛИЕНТЕ*
-• *Имя:* ${escapeMarkdown(orderData.fullName) || 'Не указано'}
-• *Email:* ${escapeMarkdown(orderData.email) || 'Не указан'}
-• *Телефон:* ${escapeMarkdown(orderData.phone) || 'Не указан'}
-• *Компания:* ${escapeMarkdown(orderData.company) || 'Не указана'}
+👤 ИНФОРМАЦИЯ О КЛИЕНТЕ
+• Имя: ${orderData.fullName || 'Не указано'}
+• Email: ${orderData.email || 'Не указан'}
+• Телефон: ${orderData.phone || 'Не указан'}
+• Компания: ${orderData.company || 'Не указана'}
 
-📋 *ДЕТАЛИ ПРОЕКТА*
-• *Тип проекта:* ${getProjectTypeInfo(orderData.projectType)}
-• *Название:* ${escapeMarkdown(orderData.projectTitle) || 'Не указано'}
-• *Описание:* 
-${escapeMarkdown(orderData.projectDescription) || 'Описание не предоставлено'}
+📋 ДЕТАЛИ ПРОЕКТА
+• Тип проекта: ${getProjectTypeInfo(orderData.projectType)}
+• Название: ${orderData.projectTitle || 'Не указано'}
+• Описание: 
+${orderData.projectDescription || 'Описание не предоставлено'}
 
-💰 *БЮДЖЕТ И СРОКИ*
-• *Бюджет:* ${orderData.budget || 'Не указан'}
-• *Временные рамки:* ${orderData.timeline || 'Не указаны'}
+💰 БЮДЖЕТ И СРОКИ
+• Бюджет: ${orderData.budget || 'Не указан'}
+• Временные рамки: ${orderData.timeline || 'Не указаны'}
 
-🔧 *ТРЕБУЕМЫЕ ФУНКЦИИ*
+🔧 ТРЕБУЕМЫЕ ФУНКЦИИ
 ${formatArray(orderData.features, 'Функции не выбраны')}
 
-🛠 *ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ*
+🛠 ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ
 ${formatArray(orderData.additionalServices, 'Доп. услуги не выбраны')}
 
-💻 *ДИЗАЙН И ПРЕДПОЧТЕНИЯ*
-${orderData.designPreferences ? escapeMarkdown(orderData.designPreferences) : 'Предпочтения не указаны'}
+💻 ДИЗАЙН И ПРЕДПОЧТЕНИЯ
+${orderData.designPreferences || 'Предпочтения не указаны'}
 
-📎 *ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ*
-${orderData.existingAssets ? `*Существующие материалы:*\n${escapeMarkdown(orderData.existingAssets)}\n` : ''}
-${orderData.inspiration ? `*Источники вдохновения:*\n${escapeMarkdown(orderData.inspiration)}\n` : ''}
-${orderData.additionalNotes ? `*Дополнительные заметки:*\n${escapeMarkdown(orderData.additionalNotes)}` : ''}
+📎 ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ
+${orderData.existingAssets ? `Существующие материалы:\n${orderData.existingAssets}\n` : ''}
+${orderData.inspiration ? `Источники вдохновения:\n${orderData.inspiration}\n` : ''}
+${orderData.additionalNotes ? `Дополнительные заметки:\n${orderData.additionalNotes}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ *Получено:* ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}
-🌐 *Источник:* eda-tech.ru  
-🎯 *Статус:* Новая заявка
+⏰ Получено: ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}
+🌐 Источник: eda-tech.ru  
+🎯 Статус: Новая заявка
 
-🎬 *БЫСТРЫЕ ДЕЙСТВИЯ:*
-• Ответить на email: ${escapeMarkdown(orderData.email) || 'Email не указан'}
-${orderData.phone ? `• Позвонить: ${escapeMarkdown(orderData.phone)}` : ''}
+🎬 БЫСТРЫЕ ДЕЙСТВИЯ:
+• Ответить на email: ${orderData.email || 'Email не указан'}
+${orderData.phone ? `• Позвонить: ${orderData.phone}` : ''}
 • Оценить проект и составить предложение
 • Добавить в CRM систему
     `.trim();
@@ -156,20 +150,20 @@ app.post('/webhook/telegram', async (req, res) => {
         }
         else if (text === '/help') {
             await sendToTelegram(
-                `❓ *Помощь по EDA-TECH Support Bot*\n\n📋 *Доступные команды:*\n/start - Запуск бота\n/help - Эта справка\n/status - Статус системы\n/chatid - Получить ID чата\n\n🌐 Сайт: https://eda-tech.ru\n💼 Студия разработки программного обеспечения`,
+                `❓ Помощь по EDA-TECH Support Bot\n\n📋 Доступные команды:\n/start - Запуск бота\n/help - Эта справка\n/status - Статус системы\n/chatid - Получить ID чата\n\n🌐 Сайт: https://eda-tech.ru\n💼 Студия разработки программного обеспечения`,
                 chatId
             );
         }
         else if (text === '/status') {
             await sendToTelegram(
-                `📊 *Статус EDA-TECH системы*\n\n✅ Бот работает\n🌐 Сервер активен\n📧 Прием заявок работает\n⏰ ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}`,
+                `📊 Статус EDA-TECH системы\n\n✅ Бот работает\n🌐 Сервер активен\n📧 Прием заявок работает\n⏰ ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}`,
                 chatId
             );
         }
         else if (text === '/chatid') {
             // Полезная команда для получения ID чата
             await sendToTelegram(
-                `🆔 *Твой Chat ID:* \`${chatId}\`\n\nИспользуй этот ID для настройки уведомлений.\n\n📝 *Инструкция:*\n1. Скопируй ID: \`${chatId}\`\n2. Замени ADMIN_CHAT_ID в коде на этот ID\n3. Перезапусти сервер`,
+                `🆔 Твой Chat ID: ${chatId}\n\nИспользуй этот ID для настройки уведомлений.\n\n📝 Инструкция:\n1. Скопируй ID: ${chatId}\n2. Замени ADMIN_CHAT_ID в коде на этот ID\n3. Перезапусти сервер`,
                 chatId
             );
         }
@@ -261,45 +255,45 @@ app.post('/api/test-order-format', async (req, res) => {
         };
 
         const message = `
-🚀 *ТЕСТОВАЯ ЗАЯВКА НА РАЗРАБОТКУ*
+🚀 ТЕСТОВАЯ ЗАЯВКА НА РАЗРАБОТКУ
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *ИНФОРМАЦИЯ О КЛИЕНТЕ*
-• *Имя:* ${testOrder.fullName || 'Не указано'}
-• *Email:* ${testOrder.email || 'Не указан'}
-• *Телефон:* ${testOrder.phone || 'Не указан'}
-• *Компания:* ${testOrder.company || 'Не указана'}
+👤 ИНФОРМАЦИЯ О КЛИЕНТЕ
+• Имя: ${testOrder.fullName || 'Не указано'}
+• Email: ${testOrder.email || 'Не указан'}
+• Телефон: ${testOrder.phone || 'Не указан'}
+• Компания: ${testOrder.company || 'Не указана'}
 
-📋 *ДЕТАЛИ ПРОЕКТА*
-• *Тип проекта:* ${getProjectTypeInfo(testOrder.projectType)}
-• *Название:* ${testOrder.projectTitle || 'Не указано'}
-• *Описание:* 
+📋 ДЕТАЛИ ПРОЕКТА
+• Тип проекта: ${getProjectTypeInfo(testOrder.projectType)}
+• Название: ${testOrder.projectTitle || 'Не указано'}
+• Описание: 
 ${testOrder.projectDescription || 'Описание не предоставлено'}
 
-💰 *БЮДЖЕТ И СРОКИ*
-• *Бюджет:* ${testOrder.budget || 'Не указан'}
-• *Временные рамки:* ${testOrder.timeline || 'Не указаны'}
+💰 БЮДЖЕТ И СРОКИ
+• Бюджет: ${testOrder.budget || 'Не указан'}
+• Временные рамки: ${testOrder.timeline || 'Не указаны'}
 
-🔧 *ТРЕБУЕМЫЕ ФУНКЦИИ*
+🔧 ТРЕБУЕМЫЕ ФУНКЦИИ
 ${formatArray(testOrder.features, 'Функции не выбраны')}
 
-🛠 *ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ*
+🛠 ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ
 ${formatArray(testOrder.additionalServices, 'Доп. услуги не выбраны')}
 
-💻 *ДИЗАЙН И ПРЕДПОЧТЕНИЯ*
-${testOrder.designPreferences ? `${testOrder.designPreferences}` : 'Предпочтения не указаны'}
+💻 ДИЗАЙН И ПРЕДПОЧТЕНИЯ
+${testOrder.designPreferences || 'Предпочтения не указаны'}
 
-📎 *ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ*
-${testOrder.existingAssets ? `*Существующие материалы:*\n${testOrder.existingAssets}\n` : ''}
-${testOrder.inspiration ? `*Источники вдохновения:*\n${testOrder.inspiration}\n` : ''}
-${testOrder.additionalNotes ? `*Дополнительные заметки:*\n${testOrder.additionalNotes}` : ''}
+📎 ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ
+${testOrder.existingAssets ? `Существующие материалы:\n${testOrder.existingAssets}\n` : ''}
+${testOrder.inspiration ? `Источники вдохновения:\n${testOrder.inspiration}\n` : ''}
+${testOrder.additionalNotes ? `Дополнительные заметки:\n${testOrder.additionalNotes}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⏰ *Получено:* ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}
-🌐 *Источник:* eda-tech.ru (ТЕСТ)
-🎯 *Статус:* Тестовая заявка
+⏰ Получено: ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}
+🌐 Источник: eda-tech.ru (ТЕСТ)
+🎯 Статус: Тестовая заявка
 
-🎬 *БЫСТРЫЕ ДЕЙСТВИЯ:*
+🎬 БЫСТРЫЕ ДЕЙСТВИЯ:
 • Ответить на email: ${testOrder.email || 'Email не указан'}
 ${testOrder.phone ? `• Позвонить: ${testOrder.phone}` : ''}
 • Оценить проект и составить предложение
