@@ -16,6 +16,12 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// === ФУНКЦИЯ ЭКРАНИРОВАНИЯ MARKDOWN ===
+function escapeMarkdown(text) {
+    if (!text) return text;
+    return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+}
+
 // === ФУНКЦИЯ ОТПРАВКИ В TELEGRAM ===
 async function sendToTelegram(message, chatId = ADMIN_CHAT_ID) {
     try {
@@ -62,16 +68,16 @@ app.post('/api/submit-order', async (req, res) => {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 👤 *ИНФОРМАЦИЯ О КЛИЕНТЕ*
-• *Имя:* ${orderData.fullName || 'Не указано'}
-• *Email:* ${orderData.email || 'Не указан'}
-• *Телефон:* ${orderData.phone || 'Не указан'}
-• *Компания:* ${orderData.company || 'Не указана'}
+• *Имя:* ${escapeMarkdown(orderData.fullName) || 'Не указано'}
+• *Email:* ${escapeMarkdown(orderData.email) || 'Не указан'}
+• *Телефон:* ${escapeMarkdown(orderData.phone) || 'Не указан'}
+• *Компания:* ${escapeMarkdown(orderData.company) || 'Не указана'}
 
 📋 *ДЕТАЛИ ПРОЕКТА*
 • *Тип проекта:* ${getProjectTypeInfo(orderData.projectType)}
-• *Название:* ${orderData.projectTitle || 'Не указано'}
+• *Название:* ${escapeMarkdown(orderData.projectTitle) || 'Не указано'}
 • *Описание:* 
-${orderData.projectDescription || 'Описание не предоставлено'}
+${escapeMarkdown(orderData.projectDescription) || 'Описание не предоставлено'}
 
 💰 *БЮДЖЕТ И СРОКИ*
 • *Бюджет:* ${orderData.budget || 'Не указан'}
@@ -84,12 +90,12 @@ ${formatArray(orderData.features, 'Функции не выбраны')}
 ${formatArray(orderData.additionalServices, 'Доп. услуги не выбраны')}
 
 💻 *ДИЗАЙН И ПРЕДПОЧТЕНИЯ*
-${orderData.designPreferences ? `${orderData.designPreferences}` : 'Предпочтения не указаны'}
+${orderData.designPreferences ? escapeMarkdown(orderData.designPreferences) : 'Предпочтения не указаны'}
 
 📎 *ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ*
-${orderData.existingAssets ? `*Существующие материалы:*\n${orderData.existingAssets}\n` : ''}
-${orderData.inspiration ? `*Источники вдохновения:*\n${orderData.inspiration}\n` : ''}
-${orderData.additionalNotes ? `*Дополнительные заметки:*\n${orderData.additionalNotes}` : ''}
+${orderData.existingAssets ? `*Существующие материалы:*\n${escapeMarkdown(orderData.existingAssets)}\n` : ''}
+${orderData.inspiration ? `*Источники вдохновения:*\n${escapeMarkdown(orderData.inspiration)}\n` : ''}
+${orderData.additionalNotes ? `*Дополнительные заметки:*\n${escapeMarkdown(orderData.additionalNotes)}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⏰ *Получено:* ${new Date().toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'})}
@@ -97,12 +103,10 @@ ${orderData.additionalNotes ? `*Дополнительные заметки:*\n$
 🎯 *Статус:* Новая заявка
 
 🎬 *БЫСТРЫЕ ДЕЙСТВИЯ:*
-• Ответить на email: ${orderData.email || 'Email не указан'}
-${orderData.phone ? `• Позвонить: ${orderData.phone}` : ''}
+• Ответить на email: ${escapeMarkdown(orderData.email) || 'Email не указан'}
+${orderData.phone ? `• Позвонить: ${escapeMarkdown(orderData.phone)}` : ''}
 • Оценить проект и составить предложение
 • Добавить в CRM систему
-
-#заявка #новый_клиент #${orderData.projectType || 'проект'}
     `.trim();
 
     try {
@@ -301,7 +305,7 @@ ${testOrder.phone ? `• Позвонить: ${testOrder.phone}` : ''}
 • Оценить проект и составить предложение
 • Добавить в CRM систему
 
-#тест #заявка #новый_клиент #${testOrder.projectType || 'проект'}
+Теги: тест, заявка, новый_клиент, ${testOrder.projectType || 'проект'}
         `.trim();
 
         const result = await sendToTelegram(message);

@@ -10,7 +10,7 @@ export function Portfolio() {
     {
       title: 'Staya Messenger',
       description: 'A modern, secure messaging platform with end-to-end encryption, real-time communication, and advanced features for both personal and business use.',
-      image: '/placeholder-staya.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: MessageCircle,
       tags: ['React Native', 'WebRTC', 'Node.js', 'Socket.io', 'Encryption'],
       gradient: 'from-purple-600 to-pink-600',
@@ -20,7 +20,7 @@ export function Portfolio() {
     {
       title: 'EDA-Computers.ru',
       description: 'E-commerce platform for custom PC building and selling. Features advanced configurator, real-time pricing, and comprehensive component database.',
-      image: '/placeholder-computers.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: Monitor,
       tags: ['Next.js', 'PostgreSQL', 'Stripe', 'Redis', 'Docker'],
       gradient: 'from-cyan-600 to-blue-600',
@@ -31,7 +31,7 @@ export function Portfolio() {
     {
       title: 'EDA-Computers Telegram Bot',
       description: 'Intelligent Telegram bot for EDA-Computers that helps customers configure PCs, check prices, and manage orders directly through Telegram.',
-      image: '/placeholder-bot.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: Bot,
       tags: ['Python', 'Telegram API', 'PostgreSQL', 'Redis', 'AI'],
       gradient: 'from-green-600 to-teal-600',

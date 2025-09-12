@@ -13,7 +13,7 @@ export function Portfolio() {
     {
       title: 'Staya Messenger',
       description: t('portfolio.staya.description'),
-      image: '/placeholder-staya.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: MessageCircle,
       tags: ['React Native', 'WebRTC', 'Node.js', 'Socket.io', 'Encryption'],
       gradient: 'from-purple-600 to-pink-600',
@@ -23,7 +23,7 @@ export function Portfolio() {
     {
       title: 'EDA-Computers.ru',
       description: t('portfolio.computers.description'),
-      image: '/placeholder-computers.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: Monitor,
       tags: ['Next.js', 'PostgreSQL', 'Stripe', 'Redis', 'Docker'],
       gradient: 'from-cyan-600 to-blue-600',
@@ -34,7 +34,7 @@ export function Portfolio() {
     {
       title: 'EDA-Computers Telegram Bot',
       description: t('portfolio.bot.description'),
-      image: '/placeholder-bot.jpg',
+      image: '/d675d636571ac335da915bc1c19be977c129f28e.png',
       icon: Bot,
       tags: ['Python', 'Telegram API', 'PostgreSQL', 'Redis', 'AI'],
       gradient: 'from-green-600 to-teal-600',
