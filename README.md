@@ -6,6 +6,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![SSL](https://img.shields.io/badge/SSL-secured-green?style=for-the-badge&logo=letsencrypt)](https://letsencrypt.org/)
 
 **Современный одностраничный сайт-портфолио с плавными анимациями и эффектным дизайном**
 
